@@ -23,5 +23,5 @@ def play_audio_file(file):
         subprocess.call(['afplay', file])
     else:
         print('Not a recognized platform')
-    
+
 
