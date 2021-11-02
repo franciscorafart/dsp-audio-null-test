@@ -28,7 +28,6 @@ ax1.set_ylim([-1,1])
 ax2.set_ylim([-1,1])
 ax3.set_ylim([-1,1])
 
-ax1.title('Original signal')
 ax1.plot(x, label='original signal')
 ax2.plot(processed_x, color='g', label='processed signal') 
 ax3.plot(null_test_signal, color='r', label='null test')
