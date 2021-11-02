@@ -2,6 +2,7 @@ import copy, os, sys
 import numpy as np
 import subprocess
 import cmath
+import scipy.fftpack as fftpack
 
 from scipy.io.wavfile import read, write
 
@@ -44,10 +45,10 @@ def write_audio_file(y, sample_rate, filename):
 #### 
 
 def shift_phase(x, radians):
-    xFFT = np.fft.rfft(x)
+    xFFT = fftpack.rfft(x)
     # xPhase = np.angle(xFFT)
-    xFFT_phase_shift = xFFT * cmath.rect( 1., radians)
-    x_shifted = np.fft.irfft(xFFT_phase_shift)
+    xFFT_phase_shift = np.real(xFFT * cmath.rect( 1., radians))
+    x_shifted = fftpack.irfft(xFFT_phase_shift)
 
     return x_shifted
 

@@ -16,26 +16,27 @@ x_shifted = shift_phase(x, np.pi) # Phase shifting x by 180 degrees (π)
 
 min_samples = min(x_shifted.shape[0], processed_x.shape[0])
 # Combine the two signals to extract pure effect
-null_test_signal = processed_x[0:min_samples] - x_shifted[0:min_samples]
-
-
+null_test_signal = processed_x[0:min_samples] + x_shifted[0:min_samples]
 
 # Plot
-
 fig, (ax1, ax2, ax3) = plt.subplots(3)
 
 t = np.arange(0, min_samples, 100)
 # TODO: Figure out how to plot 2 signals
 fig.suptitle('Vertically stacked subplots')
-ax1.plot(x, label='original signal')
-ax2.plot(processed_x, label='processed signal')
+
+ax1.set_ylim([-1,1])
+ax2.set_ylim([-1,1])
+# ax3.set_ylim([-1,1])
+
+ax1.plot(x, color='r', label='original signal')
+ax2.plot(processed_x, label='processed signal') 
 ax3.plot(null_test_signal, label='null test')
 
 plt.show()
 
-
 write_audio_file(null_test_signal, fs, null_test_filename)
 write_audio_file(processed_x, fs, processed_filename)
 
-# play_audio_file(processed_filename)
+play_audio_file(null_test_filename)
 
