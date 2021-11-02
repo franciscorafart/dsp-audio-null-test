@@ -52,4 +52,7 @@ def shift_phase(x, radians):
 
     return x_shifted
 
+def spectrum(x):
+    return fftpack.rfft(x)
+
 
