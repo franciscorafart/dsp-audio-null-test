@@ -1,31 +1,41 @@
 import numpy as np
-from audio_utils import read_audio_file, play_audio_file
-import soundfile as sf
+from audio_utils import read_audio_file, play_audio_file, write_audio_file, shift_phase
 from effects import apply_pedal
 
 import matplotlib.pyplot as plt
 
 # TODO: extract from command line
 filename = 'audio/singing-female.wav'
-new_filename = 'audio/processed.wav'
+processed_filename = 'audio/processed.wav'
+null_test_filename = 'audio/null-test.wav'
 
+# Original signal, processed signal, and null test signal
 fs, x = read_audio_file(filename)
+processed_x = apply_pedal(x, fs)
+x_shifted = shift_phase(x, np.pi) # Phase shifting x by 180 degrees (π)
 
-print('signal length:', x.shape[0], 'sample rate:', fs)
+min_samples = min(x_shifted.shape[0], processed_x.shape[0])
+# Combine the two signals to extract pure effect
+null_test_signal = processed_x[0:min_samples] - x_shifted[0:min_samples]
 
-processed_audio = apply_pedal(x, fs)
+
 
 # Plot
+
+fig, (ax1, ax2, ax3) = plt.subplots(3)
+
+t = np.arange(0, min_samples, 100)
 # TODO: Figure out how to plot 2 signals
-# plt.plot(x)
-# plt.plot(processed_audio)
-# plt.axis([0, 0, 0, ])
-# plt.show()
+fig.suptitle('Vertically stacked subplots')
+ax1.plot(x, label='original signal')
+ax2.plot(processed_x, label='processed signal')
+ax3.plot(null_test_signal, label='null test')
+
+plt.show()
 
 
-# TODO: Implememt writing function 
-with sf.SoundFile(new_filename, 'w', samplerate=fs, channels=len(processed_audio.shape)) as f:
-    f.write(processed_audio)
+write_audio_file(null_test_signal, fs, null_test_filename)
+write_audio_file(processed_x, fs, processed_filename)
 
-play_audio_file(new_filename)
+# play_audio_file(processed_filename)
 

@@ -1,8 +1,14 @@
-import os, sys
-from sys import platform
+import copy, os, sys
+import numpy as np
 import subprocess
+import cmath
 
 from scipy.io.wavfile import read, write
+
+INT16_FAC = (2**15)-1
+INT32_FAC = (2**31)-1
+INT64_FAC = (2**63)-1
+norm_fact = {'int16':INT16_FAC, 'int32':INT32_FAC, 'int64':INT64_FAC,'float32':1.0,'float64':1.0}
 
 # NOTE: Code copied from ...
 
@@ -12,7 +18,11 @@ def read_audio_file(file):
     
     sample_rate, signal = read(file)
 
-    return sample_rate, signal
+	# NOTE: Important: Understand this normalization  1
+    #scale down and convert audio into floating point number in range of -1 to 1
+    x = np.float32(signal)/norm_fact[signal.dtype.name]
+
+    return sample_rate, x
 
 def play_audio_file(file):
     if (os.path.isfile(file) == False):
@@ -23,5 +33,22 @@ def play_audio_file(file):
         subprocess.call(['afplay', file])
     else:
         print('Not a recognized platform')
+
+def write_audio_file(y, sample_rate, filename):
+    x = copy.deepcopy(y)
+    x *= INT16_FAC
+    x = np.int16(x)
+    write(filename, sample_rate, x)
+
+
+#### 
+
+def shift_phase(x, radians):
+    xFFT = np.fft.rfft(x)
+    # xPhase = np.angle(xFFT)
+    xFFT_phase_shift = xFFT * cmath.rect( 1., radians)
+    x_shifted = np.fft.irfft(xFFT_phase_shift)
+
+    return x_shifted
 
 

@@ -16,7 +16,7 @@ def apply_pedal(audio_array, fs):
     Gain(gain_db=30), # Compensation
     Chorus(),
     LadderFilter(mode=LadderFilter.Mode.HPF12, cutoff_hz=900),
-    Phaser(),
+    # Phaser(),
     # Convolution("./guitar_amp.wav", 1.0),
     Reverb(room_size=0.25),
 ], sample_rate=fs)
