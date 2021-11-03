@@ -23,21 +23,30 @@ null_test_signal = processed_x[0:min_samples] + x_shifted[0:min_samples]
 # Plot
 fig, ((x1, k1), (x2, k2), (x3, k3)) = plt.subplots(3, 2)
 
-t = np.arange(0, min_samples, 100)
+# NOTE: To display samples in seconds
+tx = np.arange(x.shape[0]) / float(fs)
+t_processedx = np.arange(min_samples) / float(fs)
+
 fig.suptitle('Signals')
 
 x1.set_ylim([-1,1])
 x2.set_ylim([-1,1])
 x3.set_ylim([-1,1])
 
-x1.plot(x, label='original signal')
-x2.plot(processed_x, color='g', label='processed signal') 
-x3.plot(null_test_signal, color='r', label='null test')
+x1.plot(tx, x, label='original signal')
+x2.plot(t_processedx, processed_x, color='g', label='processed signal')
+x3.plot(t_processedx, null_test_signal, color='r', label='null test')
+
 
 # TODO: Plot spectrums with logarithmic scale
-k1.plot(spectrum(x))
-k2.plot(spectrum(processed_x), color='g')
-k3.plot(spectrum(null_test_signal), color='r')
+spectrum_x = spectrum(x)
+tk = np.arange(20000)
+# k1.set_xscale('log')
+k1.plot(tk, spectrum_x[0:20000])
+# k2.xscale('log')
+k2.plot(tk, spectrum(processed_x)[0:20000], color='g')
+# k3.xscale('log')
+k3.plot(tk, spectrum(null_test_signal)[0:20000], color='r')
 
 plt.show()
 

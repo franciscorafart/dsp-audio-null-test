@@ -47,7 +47,7 @@ def write_audio_file(y, sample_rate, filename):
 # Reference: https://stackoverflow.com/questions/52179919/amplitude-and-phase-spectrum-shifting-the-phase-leaving-amplitude-untouched
 def shift_phase(x, radians):
     xFFT = fftpack.rfft(x)
-    xFFT_phase_shift = np.real(xFFT * cmath.rect( 1., radians))
+    xFFT_phase_shift = np.real(xFFT * cmath.rect( 1., radians)) # Real part of complex number array
     x_shifted = fftpack.irfft(xFFT_phase_shift)
 
     return x_shifted
