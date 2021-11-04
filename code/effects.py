@@ -18,7 +18,7 @@ def apply_pedal(audio_array, fs):
     board = Pedalboard([
     Compressor(threshold_db=-50, ratio=25), # threshold_db=0, ratio=1, attackMs=1, releaseMS=100
     Gain(gain_db=30), # Compensation # gain_db=1
-    # Chorus(rate_hz=5, depth=0.4, feedback=0.8), # rate_hz = 1, depth=0.25, centreDelayMs=7.0, feedback=0.0, mix=0.5
+    Chorus(rate_hz=5, depth=0.4, feedback=0.8), # rate_hz = 1, depth=0.25, centreDelayMs=7.0, feedback=0.0, mix=0.5
     LadderFilter(mode=LadderFilter.Mode.HPF12, cutoff_hz=400), # mode, cutoff_hz=200, resonance=0, drive=1
     # Phaser(), # rate_hz=1, depth-0.5, centre_frequency_hz=1300, feedback=0, mix=0.5
     # Distortion(drive_db=50), # drive_db=25)
