@@ -1,21 +1,19 @@
 from tkinter import Label, Button, Tk
 from audio_context import AudioContext
-# from plot import Plot
 import numpy as np
 import matplotlib.pyplot as plt
-from audio_utils import spectrum
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 
 ctx = AudioContext()
 window = Tk()
 
 def click():
-    signal, processed_signal, null_signal, min_samples, fs = ctx.import_click()
+    ctx.import_click()
     fig, ((x1, k1), (x2, k2), (x3, k3)) = plt.subplots(3, 2)
 
     # NOTE: To display samples in seconds
-    tx = np.arange(signal.shape[0]) / float(fs)
-    t_processedx = np.arange(min_samples) / float(fs)
+    tx = np.arange(ctx.signal.shape[0]) / float(ctx.sample_rate)
+    t_processedx = np.arange(ctx.processed_signal.shape[0]) / float(ctx.sample_rate)
 
     fig.suptitle('Signals')
 
@@ -23,18 +21,18 @@ def click():
     x2.set_ylim([-1,1])
     x3.set_ylim([-1,1])
 
-    x1.plot(tx, signal, label='original signal')
-    x2.plot(t_processedx, processed_signal, color='g', label='processed signal')
-    x3.plot(t_processedx, null_signal, color='r', label='null test')
+    x1.plot(tx, ctx.signal, label='original signal')
+    x2.plot(t_processedx, ctx.processed_signal, color='g', label='processed signal')
+    x3.plot(t_processedx, ctx.null_signal, color='r', label='null test')
 
     # TODO: Plot spectrums with logarithmic scale
     tk = np.arange(12000)
     # k1.set_xscale('log')
-    k1.plot(tk, spectrum(signal)[0:12000])
+    k1.plot(tk, ctx.signal_spectrum[0:12000])
     # k2.xscale('log')
-    k2.plot(tk, spectrum(processed_signal)[0:12000], color='g')
+    k2.plot(tk, ctx.processed_spectrum[0:12000], color='g')
     # k3.xscale('log')
-    k3.plot(tk, spectrum(null_signal)[0:12000], color='r')
+    k3.plot(tk, ctx.null_spectrum[0:12000], color='r')
 
     canvas = FigureCanvasTkAgg(fig,
                                master = window)  
