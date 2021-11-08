@@ -1,14 +1,13 @@
 import numpy as np
 from audio_utils import play_audio_file, spectrum, write_audio_file, shift_phase,read_audio_file
 from tkinter import filedialog
-from effects import apply_pedal
 
 processed_filename = 'audio/processed.wav'
 null_test_filename = 'audio/null-test.wav'
 
-def process_file(filename):
+def process_file(filename, pedal):
     fs, signal = read_audio_file(filename)
-    processed_signal = apply_pedal(signal, fs)
+    processed_signal = pedal.process_signal_chain(signal, fs)
     null_signal = processed_signal - signal
 
     write_audio_file(null_signal, fs, null_test_filename)
@@ -34,7 +33,9 @@ class AudioContext():
 
     def import_click(self):
         self.original_filename = filedialog.askopenfilename(filetypes = (("Wav files","*.wav"),("all files","*.*")))
-        signal, processed_signal, null_signal, fs = process_file(self.original_filename)
+
+    def process(self, pedal):
+        signal, processed_signal, null_signal, fs = process_file(self.original_filename, pedal)
        
         self.signal = signal
         self.signal_spectrum = spectrum(signal)
