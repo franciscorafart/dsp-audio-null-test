@@ -30,8 +30,8 @@ effect_map = {
         'config': {
             'threshold_db': 0,
             'ratio': 1,
-            'attackMs': 1,
-            'releaseMS': 100,
+            'attack_ms': 1,
+            'release_ms': 100,
         },
     },
     'chorus': {
