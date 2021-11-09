@@ -1,4 +1,4 @@
-from tkinter import Label, Button, StringVar, Tk, OptionMenu, Entry
+from tkinter import Label, Button, StringVar, Tk, OptionMenu, Entry, DoubleVar, IntVar
 from audio_context import AudioContext
 import numpy as np
 import matplotlib.pyplot as plt
@@ -38,6 +38,8 @@ class Interface():
         self.play_processed_button = None
         self.play_null_button = None
 
+        self.effects = [] # {effect_key: xxx, config_params: [(param_key, Label, Entry)]}
+
 
     def mainloop(self):
         self.window.mainloop()
@@ -57,31 +59,59 @@ class Interface():
         self.ctx.import_click()
 
         #Set the Menu initially
-        menu= StringVar()
+        menu = StringVar()
         menu.set('Select an effect')
 
         self.menu = menu
         self.dropdown = OptionMenu(self.window, menu , *effect_map.keys())
         self.dropdown.pack()
 
-        self.add_effect = Button(self.window, text='+', command=self.set_effect)
+        self.add_effect = Button(self.window, text='+', command=self.add_effect)
         self.add_effect.pack()
 
-        self.process_btn = Button(self.window, text='Process Audio', command=self.process)
-        self.process_btn.pack()
-
-    def set_effect(self): # config
+    def add_effect(self): # config
         effect_identifier = self.menu.get()
 
         effect_dict = effect_map[effect_identifier]
-        effect = effect_dict['instance']
+        effect_class = effect_dict['instance']
         default_config = effect_dict['config']
-        
-        # TODO: Modify the config
-        self.pedal.add_effect(effect, default_config)
 
-        # TODO: Clear effects
-    
+        effect_label = Label(self.window, text='{}. {}'.format(len(self.effects) + 1, effect_identifier))
+        effect_label.pack()
+
+        config_params = []
+        for param_key, v in default_config.items():
+            default_value = DoubleVar()
+            default_value.set(v)
+
+            label = Label(self.window, text=param_key)
+            param_entry = Entry(self.window, textvariable=default_value)
+
+            label.pack(side='left')
+            param_entry.pack(side='left')
+
+            config_params.append((param_key, label, param_entry))
+
+        self.effects.append({
+            'effect': effect_class,
+            'effect_label': effect_label,
+            'config_params': config_params,
+        })
+
+        # Add process button when first effect added only
+        if len(self.effects) == 1 and not self.process_btn:
+            self.process_btn = Button(self.window, text='Process Audio', command=self.process)
+            self.process_btn.pack()
+
+    def set_effect(self):
+        for effect in self.effects:
+            effect_config = {}
+            for (param_key, _, param_entry) in effect['config_params']: 
+                effect_config[param_key] = float(param_entry.get())
+
+            self.pedal.add_effect(effect['effect'], effect_config)
+
+
     def add_play_buttons(self):
         self.play_original_btn = Button(self.window, text='Play original', fg='blue', command=self.ctx.play_original)
         self.play_original_btn.pack()
@@ -101,7 +131,7 @@ class Interface():
             self.play_null_button.destroy()
 
     def process(self):
-        # self.set_effect() # TODO: This should be done through an interface
+        self.set_effect() # TODO: This should be done through an interface
         self.add_play_buttons()
 
         self.ctx.process(self.pedal)

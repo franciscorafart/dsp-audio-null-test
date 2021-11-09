@@ -22,7 +22,7 @@ effect_map = {
     'gain': {
         'instance': Gain,
         'config': {
-         'gain_db': 0,   
+            'gain_db': 0,   
         },
     },
     'compressor': {
