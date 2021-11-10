@@ -6,11 +6,6 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 from effects import Pedal, effect_map
 
-# TODO: Implement as a Class to be able to remove and add elements to interface
-# 2. Create a simple interface to add effects
-# 1. Dropdown to select effect
-# 2. text inputs spawned to add numbers with corresponding configs
-
 class Interface():
     def __init__(self):
         self.window = Tk()
@@ -29,6 +24,7 @@ class Interface():
 
         self.dropdown = None
         self.menu = None
+        self.add_effect_btn = None
 
         self.figure = None
 
@@ -44,7 +40,7 @@ class Interface():
     def mainloop(self):
         self.window.mainloop()
 
-    def reset_uid_and_effects(self):
+    def reset_ui_and_effects(self):
         if self.process_btn:
             self.process_btn.config(state='disabled')
 
@@ -61,16 +57,16 @@ class Interface():
         self.effects = []
         if self.dropdown:
             self.dropdown.destroy()
+            self.dropdown = None
+            self.menu = None
+
+        if self.add_effect_btn:
+            self.add_effect_btn.destroy()
 
         self.pedal.clear_effects()
 
-        # TODO: Figure out clear matplotlib
-        if self.figure:
-            self.figure.clf()
-
-
     def click(self):
-        self.reset_uid_and_effects()
+        self.reset_ui_and_effects()
         self.ctx.import_click()
 
         #Set the Menu initially
@@ -81,8 +77,8 @@ class Interface():
         self.dropdown = OptionMenu(self.window, menu , *effect_map.keys())
         self.dropdown.grid(row=1, column=0)
 
-        self.add_effect = Button(self.window, text='+', command=self.add_effect)
-        self.add_effect.grid(row=1, column=1)
+        self.add_effect_btn = Button(self.window, text='+', command=self.add_effect)
+        self.add_effect_btn.grid(row=1, column=1)
 
     def add_effect(self): # config
         effect_identifier = self.menu.get()
@@ -117,7 +113,6 @@ class Interface():
             'effect_label': effect_label,
             'config_params': config_params,
         })
-
         # Enable process button when first effect added only
         if len(self.effects) >= 1:
             self.process_btn.config(state="active")
@@ -184,15 +179,16 @@ class Interface():
         k3.plot(tk, self.ctx.null_spectrum[0:12000], color='r')
 
         # NOTE: Add pyplot to tkinter reference: https://www.geeksforgeeks.org/how-to-embed-matplotlib-charts-in-tkinter-gui/
-        canvas = FigureCanvasTkAgg(fig, master = self.window)  
-        canvas.draw()
+        canvas = FigureCanvasTkAgg(fig, master = self.window)
+        self.canvas = canvas  
+        self.canvas.draw()
 
         # placing the canvas on the Tkinter window
-        canvas.get_tk_widget().place(relx=0.5, rely=1, anchor='s')
+        self.canvas.get_tk_widget().place(relx=0.5, rely=1, anchor='s')
 
         # creating the Matplotlib toolbar
-        toolbar = NavigationToolbar2Tk(canvas, self.window)  # TODO: Breaking here!
-        toolbar.update()
+        # toolbar = NavigationToolbar2Tk(self.canvas, self.window)  # TODO: Breaking here!
+        # toolbar.update()
         # placing the toolbar on the Tkinter window
         # canvas.get_tk_widget().pack()
 
