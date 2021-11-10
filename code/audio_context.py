@@ -33,6 +33,7 @@ class AudioContext():
 
     def import_click(self):
         self.original_filename = filedialog.askopenfilename(filetypes = (("Wav files","*.wav"),("all files","*.*")))
+        return self.original_filename
 
     def process(self, pedal):
         signal, processed_signal, null_signal, fs = process_file(self.original_filename, pedal)

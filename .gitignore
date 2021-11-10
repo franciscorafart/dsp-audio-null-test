@@ -1,4 +1,5 @@
 /bin
 /audio
 /lib
+/code/__pycache__
 pyvenv.cfg

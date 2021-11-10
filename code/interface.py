@@ -13,28 +13,29 @@ class Interface():
         self.ctx = AudioContext()
 
         self.window.title('Null Test Application')
-        # window size
-        self.window.geometry('1200x900')
+        self.window.geometry('1200x900') # window size
 
         self.import_btn = Button(self.window, text='Import audio', command=self.click)
         self.import_btn.grid(row=0, column=0)
 
         self.process_btn = Button(self.window, text='Process Audio', command=self.process, state='disabled')
         self.process_btn.grid(row=0, column=1)
+        self.filename = None
 
         self.dropdown = None
         self.menu = None
-        self.add_effect_btn = None
-
-        self.figure = None
 
         # None buttons
+        self.add_effect_btn = None
         self.play_original_btn = None
         self.play_processed_button = None
         self.play_null_button = None
 
+        self.next_row_idx = 3
+
+        self.figure = None
+        # Effects storage
         self.effects = [] # {effect_key: xxx, config_params: [(param_key, Label, Entry)]}
-        self.new_effect_row = 3
 
 
     def mainloop(self):
@@ -67,7 +68,7 @@ class Interface():
 
     def click(self):
         self.reset_ui_and_effects()
-        self.ctx.import_click()
+        self.filename = self.ctx.import_click()
 
         #Set the Menu initially
         menu = StringVar()
@@ -88,7 +89,7 @@ class Interface():
         default_config = effect_dict['config']
 
         effect_label = Label(self.window, text='- {}'.format(effect_identifier.capitalize()), font=14)
-        effect_label.grid(row=self.new_effect_row)
+        effect_label.grid(row=self.next_row_idx)
 
         config_params = []
         for param_key, v in default_config.items():
@@ -99,14 +100,12 @@ class Interface():
             label = Label(self.window, text=param_key)
             param_entry = Entry(self.window, textvariable=default_value)
 
-            label.grid(row=self.new_effect_row + 1, column=param_index*2)
-            param_entry.grid(row=self.new_effect_row + 1, column=1 + (param_index * 2))
-
-            # Something is worng here
+            label.grid(row=self.next_row_idx + 1, column=param_index*2)
+            param_entry.grid(row=self.next_row_idx + 1, column=1 + (param_index * 2))
 
             config_params.append((param_key, label, param_entry))
 
-        self.new_effect_row = self.new_effect_row + 2
+        self.next_row_idx = self.next_row_idx + 2
 
         self.effects.append({
             'effect': effect_class,
@@ -128,15 +127,15 @@ class Interface():
 
     def add_play_buttons(self):
         self.play_original_btn = Button(self.window, text='Play original', fg='blue', command=self.ctx.play_original)
-        self.play_original_btn.grid(row=self.new_effect_row, column=0)
+        self.play_original_btn.grid(row=self.next_row_idx, column=0)
 
         self.play_processed_button = Button(self.window, text='Play processed', fg='green', command=self.ctx.play_processed)
-        self.play_processed_button.grid(row=self.new_effect_row, column=1)
+        self.play_processed_button.grid(row=self.next_row_idx, column=1)
 
         self.play_null_button = Button(self.window, text='Play null', fg='red', command=self.ctx.play_null)
-        self.play_null_button.grid(row=self.new_effect_row, column=2)
+        self.play_null_button.grid(row=self.next_row_idx, column=2)
 
-        self.new_effect_row = self.new_effect_row + 1
+        self.next_row_idx = self.next_row_idx + 1
 
     def remove_play_buttons(self):
         if self.play_original_btn:
@@ -147,7 +146,9 @@ class Interface():
             self.play_null_button.destroy()
 
     def process(self):
-        self.set_effect() # TODO: This should be done through an interface
+        self.set_effect()
+
+        self.remove_play_buttons()
         self.add_play_buttons()
 
         self.ctx.process(self.pedal)
@@ -159,7 +160,7 @@ class Interface():
         tx = np.arange(self.ctx.signal.shape[0]) / float(self.ctx.sample_rate)
         t_processedx = np.arange(self.ctx.processed_signal.shape[0]) / float(self.ctx.sample_rate)
 
-        self.figure.suptitle('Signals')
+        self.figure.suptitle('Signals for {}'.format(self.filename.split('/')[-1]))
 
         x1.set_ylim([-1,1])
         x2.set_ylim([-1,1])
