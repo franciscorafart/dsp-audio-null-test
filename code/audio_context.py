@@ -31,7 +31,7 @@ class AudioContext():
 
         self.sample_rate = None
 
-    def import_click(self):
+    def import_file(self):
         self.original_filename = filedialog.askopenfilename(filetypes = (("Wav files","*.wav"),("all files","*.*")))
         return self.original_filename
 
