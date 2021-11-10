@@ -71,7 +71,7 @@ effect_map = {
         'config': {
             'rate_hz': 1,
             'depth': 0.5,
-            'center_frequency_hz': 1300,
+            'centre_frequency_hz': 1300,
             'feedback': 0,
             'mix': 0.5,
         },

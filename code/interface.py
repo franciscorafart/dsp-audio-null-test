@@ -15,10 +15,10 @@ class Interface():
         self.window.title('Null Test Application')
         self.window.geometry('1200x900') # window size
 
-        self.import_btn = Button(self.window, text='Import audio', command=self.import_file)
+        self.import_btn = Button(self.window, text='Import Audio', command=self.import_file, width=8)
         self.import_btn.grid(row=0, column=0)
 
-        self.process_btn = Button(self.window, text='Process Audio', command=self.process_audio_and_plot, state='disabled')
+        self.process_btn = Button(self.window, text='Process Audio', command=self.process_audio_and_plot, state='disabled', width=8)
         self.process_btn.grid(row=0, column=1)
         self.filename = None
 
@@ -47,13 +47,13 @@ class Interface():
 
         #Set the Menu initially
         menu = StringVar()
-        menu.set('Select an effect')
+        menu.set('Select effect')
 
         self.menu = menu
         self.dropdown = OptionMenu(self.window, menu , *effect_map.keys())
         self.dropdown.grid(row=1, column=0)
 
-        self.add_effect_btn = Button(self.window, text='+', command=self.add_effect)
+        self.add_effect_btn = Button(self.window, text='+', command=self.add_effect, width=8)
         self.add_effect_btn.grid(row=1, column=1)
 
     def process_audio_and_plot(self):
@@ -109,8 +109,8 @@ class Interface():
         effect_class = effect_dict['instance']
         default_config = effect_dict['config']
 
-        effect_label = Label(self.window, text='- {}'.format(effect_identifier.capitalize()), font=14)
-        effect_label.grid(row=self.next_row_idx)
+        effect_label = Label(self.window, text=effect_identifier.capitalize(), font=16)
+        effect_label.grid(row=self.next_row_idx, column=1)
 
         config_params = []
         for param_key, v in default_config.items():
@@ -119,14 +119,14 @@ class Interface():
             default_value.set(v)
 
             label = Label(self.window, text=param_key)
-            param_entry = Entry(self.window, textvariable=default_value)
+            param_entry = Entry(self.window, textvariable=default_value, width=5)
 
-            label.grid(row=self.next_row_idx + 1, column=param_index*2)
-            param_entry.grid(row=self.next_row_idx + 1, column=1 + (param_index * 2))
+            label.grid(row=self.next_row_idx, column=(param_index*2)+2)
+            param_entry.grid(row=self.next_row_idx, column= 1 + (param_index * 2) + 2)
 
             config_params.append((param_key, label, param_entry))
 
-        self.next_row_idx = self.next_row_idx + 2
+        self.next_row_idx = self.next_row_idx + 1
 
         self.effects.append({
             'effect': effect_class,
@@ -144,7 +144,7 @@ class Interface():
             for (param_key, _, param_entry) in effect['config_params']:
                 value = param_entry.get().replace('-', '').replace('.', '')
                 if value.isdigit():
-                    effect_config[param_key] = float(value) # TODO: Fix string issues for filter. Use is_number function to decide which type
+                    effect_config[param_key] = float(param_entry.get()) # TODO: Fix string issues for filter. Use is_number function to decide which type
                 else:
                     mode = self.pedal.get_mode(param_entry.get())
                     if mode:
