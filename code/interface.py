@@ -1,5 +1,4 @@
-from tkinter import Label, Button, StringVar, Tk, OptionMenu, Entry, DoubleVar, IntVar
-from tkinter.constants import ANCHOR
+from tkinter import Label, Button, StringVar, Tk, OptionMenu, Entry, DoubleVar
 from audio_context import AudioContext
 import numpy as np
 import matplotlib.pyplot as plt

@@ -1,5 +1,5 @@
 import numpy as np
-from audio_utils import play_audio_file, spectrum, write_audio_file, shift_phase,read_audio_file
+from audio_utils import play_audio_file, spectrum, write_audio_file, read_audio_file
 from tkinter import filedialog
 
 processed_filename = 'audio/processed.wav'
@@ -37,7 +37,7 @@ class AudioContext():
 
     def process(self, pedal):
         signal, processed_signal, null_signal, fs = process_file(self.original_filename, pedal)
-       
+
         self.signal = signal
         self.signal_spectrum = spectrum(signal)
 
