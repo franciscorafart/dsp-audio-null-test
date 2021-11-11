@@ -1,13 +1,12 @@
 # Project
-Audio Null Test interface for signal processing
+Null-Test interface for audio signals
 
 # Description
-A null test interface for visualizing effects of audio processing in a waveform.
+A null test interface for visualizing audio effects processing in a waveform.
 
 The app allows you to import a file, add a chain of audio effects using the pedalboard package by Spotify, and visualize the wave forms and frequency spectrum of the original signal, the processed signal, as well as the difference between them (null test).
 
-# Technology
-pedalboard api by spotify
+A null-test is a useful method to determine what exactly a given audio process does to a signal. It does this by substracting the original signal from the processed signal, or adding the phase-shifted (180 degrees) original signal to the processed one.
 
 # Setup
     - Extract files or clone repository
