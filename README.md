@@ -16,3 +16,7 @@ pedalboard api by spotify
     - Install packages $ pip install -r requirements.txt
     - Run `$ python3 code/interface.py`
     - Deactivate the environment when finished $ deactivate
+
+# Screenshot
+
+![Alt text](./screenshot.png?raw=true "Null Test Application")
