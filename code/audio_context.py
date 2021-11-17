@@ -5,7 +5,7 @@ from tkinter import filedialog
 processed_filename = 'audio/processed.wav'
 null_test_filename = 'audio/null-test.wav'
 
-def process_file(filename, pedal):
+def _process_file(filename, pedal):
     fs, signal = read_audio_file(filename)
     processed_signal = pedal.process_signal_chain(signal, fs)
     null_signal = processed_signal - signal
@@ -36,7 +36,7 @@ class AudioContext():
         return self.original_filename
 
     def process(self, pedal):
-        signal, processed_signal, null_signal, fs = process_file(self.original_filename, pedal)
+        signal, processed_signal, null_signal, fs = _process_file(self.original_filename, pedal)
 
         self.signal = signal
         self.signal_spectrum = spectrum(signal)

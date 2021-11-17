@@ -1,5 +1,5 @@
-/bin
-/audio
-/lib
-/code/__pycache__
+bin
+audio
+lib
 pyvenv.cfg
+code/__pycache__

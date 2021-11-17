@@ -13,7 +13,7 @@ from pedalboard import (
     Phaser,
     NoiseGate,
 )
-print('LadderFilter.Mode', LadderFilter.Mode)
+
 effect_map = {
     'gain': {
         'instance': Gain,

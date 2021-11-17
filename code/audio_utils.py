@@ -16,11 +16,12 @@ norm_fact = {'int16':INT16_FAC, 'int32':INT32_FAC, 'int64':INT64_FAC,'float32':1
 def read_audio_file(file):
     if (os.path.isfile(file) == False):
         raise ValueError('{} is not a file'.format(file))
-    
+
     sample_rate, signal = read(file)
 
 	# NOTE: Important: Understand this normalization  1
-    #scale down and convert audio into floating point number in range of -1 to 1
+    # scale down and convert audio into floating point number in range of -1 to 1
+    print('signal.dtype.name', signal.dtype.name)
     x = np.float32(signal)/norm_fact[signal.dtype.name]
 
     return sample_rate, x
@@ -42,8 +43,6 @@ def write_audio_file(y, sample_rate, filename):
     write(filename, sample_rate, x)
 
 
-#### 
-
 # Reference: https://stackoverflow.com/questions/52179919/amplitude-and-phase-spectrum-shifting-the-phase-leaving-amplitude-untouched
 def shift_phase(x, radians):
     xFFT = fftpack.rfft(x)
@@ -54,5 +53,22 @@ def shift_phase(x, radians):
 
 def spectrum(x):
     return fftpack.rfft(x)
+
+def complex_spectrum(x):
+    return fftpack.fft(x)
+
+# Jeff Wang's implementation of convolution algorithm
+def convolve(x, y):
+    z = [0] * (len(x) + len(y) - 1)
+    for i, v in enumerate(x):
+        for j, w in enumerate(y):
+            z[i+j] += v*w
+    return z
+
+    # Test case
+    # Plan      *  Patient List   = Total Daily Usage
+
+    # [3 2 1]   *  [1 2 3 4 5]    = [3 8 14 20 26 14 5]
+    #               M T W T F        M T W  T  F  S  S
 
 
