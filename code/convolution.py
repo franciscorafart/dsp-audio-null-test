@@ -21,9 +21,9 @@ class Convolve():
     # NOTE: Doing convolution by doing fft -> multiplying the frequency domains -> doing inverse fft. O(n log(n))
     def convolve_freq_complex(self):
         self.set_complex_spectrum()
-        convolution = self.spectrum_y * self.spectrum_x
+        product = self.spectrum_y * self.spectrum_x
 
-        return fftpack.ifft(convolution)
+        return fftpack.ifft(product)
 
     # NOTE: Doing convolution by doing fft -> multiplying the frequency domains -> doing inverse fft. O(n log(n))
     # Doing it only in the real spectrum (cuts the audio duration)
@@ -50,7 +50,7 @@ class Convolve():
 
         return x_pad, y_pad
 
-fs_x, x = read_audio_file('./audio/large-hall.wav')
+fs_x, x = read_audio_file('./audio/stick.wav')
 fs_y, y = read_audio_file('./audio/singing-female.wav')
 c = Convolve(x, y).convolve_freq_complex()
 
