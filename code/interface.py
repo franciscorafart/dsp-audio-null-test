@@ -1,4 +1,4 @@
-from tkinter import Label, Button, StringVar, Tk, OptionMenu, Entry, DoubleVar
+from tkinter import Label, Button, StringVar, Tk, OptionMenu, Entry, DoubleVar, ttk, Frame
 from audio_context import AudioContext
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,16 +8,25 @@ from effects import Pedal, effect_map
 class Interface():
     def __init__(self):
         self.window = Tk()
+
+        tabControl = ttk.Notebook(self.window)
+        self.tab1 = Frame(tabControl)
+        self.tab2 = Frame(tabControl)
+
+        tabControl.add(self.tab1, text ='Tab 1')
+        tabControl.add(self.tab2, text ='Tab 2')
+        tabControl.pack(expand = 1, fill ="both")
+
         self.pedal = Pedal()
         self.ctx = AudioContext()
 
         self.window.title('Null Test Application')
         self.window.geometry('1200x900') # window size
 
-        self.import_btn = Button(self.window, text='Import Audio', command=self.import_file, width=8)
+        self.import_btn = Button(self.tab1, text='Import Audio', command=self.import_file, width=8)
         self.import_btn.grid(row=0, column=0)
 
-        self.process_btn = Button(self.window, text='Process Audio', command=self.process_audio_and_plot, state='disabled', width=8)
+        self.process_btn = Button(self.tab1, text='Process Audio', command=self.process_audio_and_plot, state='disabled', width=8)
         self.process_btn.grid(row=0, column=1)
         self.filename = None
 
@@ -49,10 +58,10 @@ class Interface():
         menu.set('Select effect')
 
         self.menu = menu
-        self.dropdown = OptionMenu(self.window, menu , *effect_map.keys())
+        self.dropdown = OptionMenu(self.tab1, menu , *effect_map.keys())
         self.dropdown.grid(row=1, column=0)
 
-        self.add_effect_btn = Button(self.window, text='+', command=self.add_effect, width=8)
+        self.add_effect_btn = Button(self.tab1, text='+', command=self.add_effect, width=8)
         self.add_effect_btn.grid(row=1, column=1)
 
     def process_audio_and_plot(self):
@@ -88,7 +97,7 @@ class Interface():
         k3.plot(tk, self.ctx.null_spectrum[0:12000], color='r')
 
         # NOTE: Add pyplot to tkinter reference: https://www.geeksforgeeks.org/how-to-embed-matplotlib-charts-in-tkinter-gui/
-        canvas = FigureCanvasTkAgg(fig, master = self.window)
+        canvas = FigureCanvasTkAgg(fig, master = self.tab1)
         self.canvas = canvas
         self.canvas.draw()
 
@@ -96,7 +105,7 @@ class Interface():
         self.canvas.get_tk_widget().place(relx=0.5, rely=1, anchor='s')
 
         # creating the Matplotlib toolbar
-        # toolbar = NavigationToolbar2Tk(self.canvas, self.window)  # TODO: Breaking here!
+        # toolbar = NavigationToolbar2Tk(self.canvas, self.tab1)  # TODO: Breaking here!
         # toolbar.update()
         # placing the toolbar on the Tkinter window
         # canvas.get_tk_widget().pack()
@@ -108,7 +117,7 @@ class Interface():
         effect_class = effect_dict['instance']
         default_config = effect_dict['config']
 
-        effect_label = Label(self.window, text=effect_identifier.capitalize(), font=16)
+        effect_label = Label(self.tab1, text=effect_identifier.capitalize(), font=16)
         effect_label.grid(row=self.next_row_idx, column=1)
 
         config_params = []
@@ -117,8 +126,8 @@ class Interface():
             default_value = DoubleVar()
             default_value.set(v)
 
-            label = Label(self.window, text=param_key)
-            param_entry = Entry(self.window, textvariable=default_value, width=5)
+            label = Label(self.tab1, text=param_key)
+            param_entry = Entry(self.tab1, textvariable=default_value, width=5)
 
             label.grid(row=self.next_row_idx, column=(param_index*2)+2)
             param_entry.grid(row=self.next_row_idx, column= 1 + (param_index * 2) + 2)
@@ -154,13 +163,13 @@ class Interface():
 
 
     def add_play_buttons(self):
-        self.play_original_btn = Button(self.window, text='Play original', fg='blue', command=self.ctx.play_original)
+        self.play_original_btn = Button(self.tab1, text='Play original', fg='blue', command=self.ctx.play_original)
         self.play_original_btn.grid(row=self.next_row_idx, column=0)
 
-        self.play_processed_button = Button(self.window, text='Play processed', fg='green', command=self.ctx.play_processed)
+        self.play_processed_button = Button(self.tab1, text='Play processed', fg='green', command=self.ctx.play_processed)
         self.play_processed_button.grid(row=self.next_row_idx, column=1)
 
-        self.play_null_button = Button(self.window, text='Play null', fg='red', command=self.ctx.play_null)
+        self.play_null_button = Button(self.tab1, text='Play null', fg='red', command=self.ctx.play_null)
         self.play_null_button.grid(row=self.next_row_idx, column=2)
 
         self.next_row_idx = self.next_row_idx + 1
