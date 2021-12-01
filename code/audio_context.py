@@ -49,6 +49,9 @@ class AudioContext():
 
         self.sample_rate = fs
 
+    def play_file(self, filename):
+        play_audio_file(filename)
+
     def play_null(self):
         play_audio_file(self.null_filename)
 
@@ -57,3 +60,4 @@ class AudioContext():
 
     def play_original(self):
         play_audio_file(self.original_filename)
+

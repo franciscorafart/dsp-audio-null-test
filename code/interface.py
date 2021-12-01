@@ -4,23 +4,26 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 from effects import Pedal, effect_map
+from convolution.convolution_ui import ConvolutionUI
 
 class Interface():
     def __init__(self):
         self.window = Tk()
-
         tabControl = ttk.Notebook(self.window)
-        self.tab1 = Frame(tabControl)
-        self.tab2 = Frame(tabControl)
-
-        tabControl.add(self.tab1, text ='Tab 1')
-        tabControl.add(self.tab2, text ='Tab 2')
-        tabControl.pack(expand = 1, fill ="both")
 
         self.pedal = Pedal()
         self.ctx = AudioContext()
 
-        self.window.title('Null Test Application')
+        self.tab1 = Frame(tabControl)
+        tab2 = Frame(tabControl)
+
+        tabControl.add(self.tab1, text ='Null Test')
+        tabControl.add(tab2, text ='Convolution')
+        tabControl.pack(expand = 1, fill ="both")
+
+        self.tab2 = ConvolutionUI(tab2, self.ctx)
+
+        self.window.title('Rafart Audio Utils')
         self.window.geometry('1200x900') # window size
 
         self.import_btn = Button(self.tab1, text='Import Audio', command=self.import_file, width=8)

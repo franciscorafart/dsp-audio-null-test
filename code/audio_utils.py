@@ -21,7 +21,6 @@ def read_audio_file(file):
 
 	# NOTE: Important: Understand this normalization  1
     # scale down and convert audio into floating point number in range of -1 to 1
-    print('signal.dtype.name', signal.dtype.name)
     x = np.float32(signal)/norm_fact[signal.dtype.name]
 
     return sample_rate, x
@@ -57,18 +56,5 @@ def spectrum(x):
 def complex_spectrum(x):
     return fftpack.fft(x)
 
-# Jeff Wang's implementation of convolution algorithm
-def convolve(x, y):
-    z = [0] * (len(x) + len(y) - 1)
-    for i, v in enumerate(x):
-        for j, w in enumerate(y):
-            z[i+j] += v*w
-    return z
-
-    # Test case
-    # Plan      *  Patient List   = Total Daily Usage
-
-    # [3 2 1]   *  [1 2 3 4 5]    = [3 8 14 20 26 14 5]
-    #               M T W T F        M T W  T  F  S  S
 
 

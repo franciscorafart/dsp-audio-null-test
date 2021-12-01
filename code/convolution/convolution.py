@@ -1,11 +1,18 @@
 import numpy as np
-from audio_utils import spectrum, complex_spectrum, read_audio_file, write_audio_file
+from audio_utils import spectrum, complex_spectrum, read_audio_file
 import scipy.fftpack as fftpack
 
 class Convolve():
-    def __init__(self, x, y):
+    def __init__(self, file1, file2):
+        fs_x, x = read_audio_file(file1)
+        fs_y, y = read_audio_file(file2)
+
+        if (fs_x != fs_y):
+            raise Exception('Files must have same sample rate')
+
         self.x = x
         self.y = y
+        self.fs = fs_x
 
 
     def set_real_spectrum(self, gain_factor=0.1):
@@ -42,6 +49,20 @@ class Convolve():
 
         return np.convolve(x_pad, y_pad)
 
+    # Jeff Wang's implementation of convolution algorithm O(N^2)
+    def convolve(x, y):
+        z = [0] * (len(x) + len(y) - 1)
+        for i, v in enumerate(x):
+            for j, w in enumerate(y):
+                z[i+j] += v*w
+        return z
+
+        # Test case
+        # Plan      *  Patient List   = Total Daily Usage
+
+        # [3 2 1]   *  [1 2 3 4 5]    = [3 8 14 20 26 14 5]
+        #               M T W T F        M T W  T  F  S  S
+
     def _zero_pad(self, gain_factor=0.1):
         max_length = self.x.shape[0] + self.y.shape[0] - 1
         # max_length = max(self.x.shape[0], self.y.shape[0])
@@ -50,8 +71,3 @@ class Convolve():
 
         return x_pad, y_pad
 
-fs_x, x = read_audio_file('./audio/stick.wav')
-fs_y, y = read_audio_file('./audio/singing-female.wav')
-c = Convolve(x, y).convolve_freq_complex()
-
-write_audio_file(c, fs_x, './audio/processed-convolution-3.wav')
