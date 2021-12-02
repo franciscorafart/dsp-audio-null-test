@@ -1,6 +1,5 @@
 import numpy as np
 from audio_utils import play_audio_file, spectrum, write_audio_file, read_audio_file
-from tkinter import filedialog
 
 processed_filename = 'audio/processed.wav'
 null_test_filename = 'audio/null-test.wav'
@@ -31,11 +30,8 @@ class AudioContext():
 
         self.sample_rate = None
 
-    def import_file(self):
-        self.original_filename = filedialog.askopenfilename(filetypes = (("Wav files","*.wav"),("all files","*.*")))
-        return self.original_filename
-
-    def process(self, pedal):
+    def process(self, pedal, filename):
+        self.original_filename = filename
         signal, processed_signal, null_signal, fs = _process_file(self.original_filename, pedal)
 
         self.signal = signal
@@ -49,15 +45,11 @@ class AudioContext():
 
         self.sample_rate = fs
 
-    def play_file(self, filename):
-        play_audio_file(filename)
-
-    def play_null(self):
-        play_audio_file(self.null_filename)
-
-    def play_processed(self):
-        play_audio_file(self.processed_filename)
-
-    def play_original(self):
-        play_audio_file(self.original_filename)
+    def play(self, identifier):
+        if identifier == 'original':
+            play_audio_file(self.null_filename)
+        elif identifier == 'processed':
+            play_audio_file(self.processed_filename)
+        elif identifier == 'null':
+            play_audio_file(self.original_filename)
 

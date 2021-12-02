@@ -1,14 +1,14 @@
 from tkinter import Button, StringVar, Tk, ttk, Frame
 from convolution.convolution import Convolve
+from audio_utils import play_audio_file, import_file
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 import matplotlib.pyplot as plt
 import numpy as np
 from audio_utils import write_audio_file
 
 class ConvolutionUI():
-    def __init__(self, tab, ctx):
+    def __init__(self, tab):
         self.tab = tab
-        self.ctx = ctx
 
         self.import_btn1 = Button(self.tab, text='Import Audio 1', command=lambda: self.import_file(1), width=8)
         self.import_btn1.grid(row=0, column=0)
@@ -20,11 +20,11 @@ class ConvolutionUI():
         self.filename2 = None
         self.convolve_file = './audio/processed-convolution-3.wav'
 
-    def import_file1(self, i):
+    def import_file(self, i):
         if (i==1):
-            self.filename1 = self.ctx.import_file()
+            self.filename1 = import_file()
         elif(i==2):
-            self.filename2 = self.ctx.import_file()
+            self.filename2 = import_file()
 
         self.allow_process()
 
@@ -41,13 +41,13 @@ class ConvolutionUI():
         self.add_play_buttons()
 
     def add_play_buttons(self):
-        self.play_original_btn = Button(self.tab, text='Play audio 1', fg='blue', command=lambda: self.ctx.play_file(self.filename1))
+        self.play_original_btn = Button(self.tab, text='Play audio 1', fg='blue', command=lambda: play_audio_file(self.filename1))
         self.play_original_btn.grid(row=2, column=0)
 
-        self.play_processed_button = Button(self.tab, text='Play audio 2', fg='green', command=lambda: self.ctx.play_file(self.filename2))
+        self.play_processed_button = Button(self.tab, text='Play audio 2', fg='green', command=lambda: play_audio_file(self.filename2))
         self.play_processed_button.grid(row=2, column=1)
 
-        self.play_null_button = Button(self.tab, text='Play convolution', fg='red', command=lambda: self.ctx.play_file(self.convolve_file))
+        self.play_null_button = Button(self.tab, text='Play convolution', fg='red', command=lambda: play_audio_file(self.convolve_file))
         self.play_null_button.grid(row=2, column=2)
 
     # TODO: 1. Add wave visualization / 2. Add Entry to determine export file name

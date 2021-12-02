@@ -1,5 +1,4 @@
 from tkinter import Tk, ttk, Frame
-from audio_context import AudioContext
 from nulltest.nulltest_ui import NullTestUI
 from convolution.convolution_ui import ConvolutionUI
 
@@ -8,8 +7,6 @@ class Interface():
         self.window = Tk()
         tabControl = ttk.Notebook(self.window)
 
-        self.ctx = AudioContext()
-
         tab1 = Frame(tabControl)
         tab2 = Frame(tabControl)
 
@@ -17,8 +14,8 @@ class Interface():
         tabControl.add(tab2, text ='Convolution')
         tabControl.pack(expand = 1, fill ="both")
 
-        self.tab2 = ConvolutionUI(tab2, self.ctx)
-        self.tab1 = NullTestUI(tab1, self.ctx)
+        self.tab2 = ConvolutionUI(tab2)
+        self.tab1 = NullTestUI(tab1)
 
         self.window.title('Rafart Audio Utils')
         self.window.geometry('1200x900') # window size

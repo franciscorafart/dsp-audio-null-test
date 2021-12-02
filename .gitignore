@@ -3,3 +3,5 @@ audio
 lib
 pyvenv.cfg
 code/__pycache__
+code/convolution/__pycache__
+code/nulltest/__pycache__

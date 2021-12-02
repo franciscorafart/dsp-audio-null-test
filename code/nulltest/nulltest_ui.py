@@ -1,13 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from effects import Pedal, effect_map
+from nulltest.audio_context import AudioContext
 from tkinter import Label, Button, StringVar, OptionMenu, Entry, DoubleVar
+from audio_utils import import_file
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 
 class NullTestUI():
-    def __init__(self, tab, ctx):
+    def __init__(self, tab):
         self.tab = tab
-        self.ctx = ctx
+        self.ctx = AudioContext()
 
         self.pedal = Pedal()
 
@@ -35,7 +37,7 @@ class NullTestUI():
 
     def import_file(self):
         self.reset_ui_and_effects()
-        self.filename = self.ctx.import_file()
+        self.filename = import_file()
 
         #Set the Menu initially
         menu = StringVar()
@@ -54,7 +56,7 @@ class NullTestUI():
         self.remove_play_buttons()
         self.add_play_buttons()
 
-        self.ctx.process(self.pedal)
+        self.ctx.process(self.pedal, self.filename)
         fig, ((x1, k1), (x2, k2), (x3, k3)) = plt.subplots(3, 2)
 
         self.figure = fig
@@ -147,13 +149,13 @@ class NullTestUI():
 
 
     def add_play_buttons(self):
-        self.play_original_btn = Button(self.tab, text='Play original', fg='blue', command=self.ctx.play_original)
+        self.play_original_btn = Button(self.tab, text='Play original', fg='blue', command=lambda: self.ctx.play('original'))
         self.play_original_btn.grid(row=self.next_row_idx, column=0)
 
-        self.play_processed_button = Button(self.tab, text='Play processed', fg='green', command=self.ctx.play_processed)
+        self.play_processed_button = Button(self.tab, text='Play processed', fg='green', command=lambda: self.ctx.play('processed'))
         self.play_processed_button.grid(row=self.next_row_idx, column=1)
 
-        self.play_null_button = Button(self.tab, text='Play null', fg='red', command=self.ctx.play_null)
+        self.play_null_button = Button(self.tab, text='Play null', fg='red', command=lambda: self.ctx.play('null'))
         self.play_null_button.grid(row=self.next_row_idx, column=2)
 
         self.next_row_idx = self.next_row_idx + 1

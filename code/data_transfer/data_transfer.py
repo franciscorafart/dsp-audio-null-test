@@ -81,7 +81,6 @@ def decode(x, distance_samples, fs):
     frequency_bin_count = distance_samples / 2 # Number of bins = fft size / 2
     freq_range_per_bin = max_freq / frequency_bin_count
 
-    print('chunk count', chunk_count)
     for i in range(0, chunk_count):
         # if i == chunk_count-1:
         #     chunk = x[i*distance_samples:]
