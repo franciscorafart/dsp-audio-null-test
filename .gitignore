@@ -1,6 +1,7 @@
 bin
 audio
 lib
+include
 pyvenv.cfg
 code/__pycache__
 code/convolution/__pycache__
