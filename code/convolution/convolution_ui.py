@@ -1,4 +1,4 @@
-from tkinter import Button, StringVar, Tk, ttk, Frame
+from tkinter import Button, StringVar, Tk, ttk, Frame, Label
 from convolution.convolution import Convolve
 from audio_utils import play_audio_file, import_file, spectrum
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
@@ -32,7 +32,9 @@ class ConvolutionUI():
     def allow_process(self):
         if (self.filename1 and self.filename2):
             self.add_effect_btn = Button(self.tab, text='Convolve', command=self.convolve, width=8)
-            self.add_effect_btn.grid(row=1, column=1)
+            self.add_effect_btn.grid(row=1, column=0)
+            self.file_label = Label(self.tab, text='Files loaded: 1. {} / 2. {}'.format(self.filename1.split('/')[-1], self.filename2.split('/')[-1]))
+            self.file_label.grid(row=1, column=1)
 
     def convolve(self):
         self.convolved = Convolve(self.filename1, self.filename2)
@@ -51,8 +53,6 @@ class ConvolutionUI():
 
         self.play_null_button = Button(self.tab, text='Play convolution', fg='red', command=lambda: play_audio_file(self.convolve_file))
         self.play_null_button.grid(row=2, column=2)
-
-    # TODO: 1. Add wave visualization / 2. Add Entry to determine export file name
 
     def process_audio_and_plot(self):
         fig, ((x1, k1), (x2, k2), (x3, k3)) = plt.subplots(3, 2)

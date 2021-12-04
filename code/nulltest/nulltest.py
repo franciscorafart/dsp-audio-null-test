@@ -14,7 +14,7 @@ def _process_file(filename, pedal):
 
     return signal, processed_signal, null_signal, fs
 
-class AudioContext():
+class NullTest():
     def __init__(self):
         self.original_filename = None
         self.processed_filename = processed_filename

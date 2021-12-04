@@ -1,15 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from effects import Pedal, effect_map
-from nulltest.audio_context import AudioContext
+from nulltest.nulltest import NullTest
 from tkinter import Label, Button, StringVar, OptionMenu, Entry, DoubleVar
 from audio_utils import import_file
-from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg)
 
 class NullTestUI():
     def __init__(self, tab):
         self.tab = tab
-        self.ctx = AudioContext()
+        self.ctx = NullTest()
 
         self.pedal = Pedal()
 
@@ -89,12 +89,6 @@ class NullTestUI():
 
         # placing the canvas on the Tkinter window
         self.canvas.get_tk_widget().place(relx=0.5, rely=1, anchor='s')
-
-        # creating the Matplotlib toolbar
-        # toolbar = NavigationToolbar2Tk(self.canvas, self.tab)  # TODO: Breaking here!
-        # toolbar.update()
-        # placing the toolbar on the Tkinter window
-        # canvas.get_tk_widget().pack()
 
     def add_effect(self): # config
         effect_identifier = self.menu.get()
